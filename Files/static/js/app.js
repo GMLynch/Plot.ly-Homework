@@ -1,3 +1,27 @@
+function init() {
+    //reference id in the dropdownMenu
+    var dropdownMenu = d3.select("#selDataset");
+    //get data
+    d3.json("samples.json").then((data) => {
+        data.names.forEach((name) => {
+            dropdownMenu
+            .append("option")
+            .text(name)
+            .property("value"); 
+        });
+    // // capture starting data
+    // const newData = data[0];
+    // sample_metadata(newData);
+    // plotData(newData);
+    optionChanged();
+    });
+}
+//D3 change option event handler 
+function optionChanged(newData){
+    sample_metadata(newData);
+    plotData(newData)
+}
+init();
 // metadata function for Demographic Info panel
 function plotData(id) {
     //import the data ()
@@ -6,7 +30,7 @@ function plotData(id) {
         console.log(data);
         var panelData = data.metadata;
         //add filter for ids
-        var panel = panelData.filter(md => md.id.toString() === id);
+        var panel = panelData.filter(md => md.id == newData);
         var results = panel[0];
         //Add code for dropdown menu to populate the Demographic info
         var info_data = d3.select("#sample-metadata"); 
@@ -30,14 +54,12 @@ function sample_metadata(id) {
         //var sampledata = data.samples;
         //var metadatas = data.metadata;
         //Retrieve id and slice for the top 10 and reverse the array to work with plotly 
-        var results1 = data.samples.filter(ids => ids.id.toString() === id)[0];
+        var results1 = data.samples.filter(ids => ids.id == newData)[0];
         console.log(results1);
         //get properties
-        var toptenIDs = results1.otu_ids.slice(0, 10).reverse();
-        var strtopIds = toptenIDs.map(d => "OTU" + d);
+        var strtopIds = results1.otu_ids.map(id=>`OTUid ${id}`).slice(0,10).reverse();
         var topSamples = results1.sample_values.slice(0, 10).reverse();
         var toplabels = results1.otu_labels.slice(0, 10).reverse();  
-        console.log(toptenIDs);
         console.log(toplabels);
         console.log(topSamples);
         console.log(strtopIds);
@@ -92,26 +114,3 @@ function sample_metadata(id) {
 }
 
 
-//D3 change option event handler 
-function optionChanged(id){
-    d3.event.preventDefault();
-    sample_metadata(id);
-    plotData(id)
-}
-function init() {
-    //reference id in the dropdownMenu
-    var dropdownMenu = d3.select("#selDataset");
-    //get data
-    d3.json("samples.json").then((data) => {
-        data.names.forEach((name) => {
-            dropdownMenu
-            .append("option")
-            .text(name)
-            .property("value"); 
-        });
-    // capture starting data
-    sample_metadata(data.names[0]);
-    plotData(data.names[0]);
-    });
-}
-init();

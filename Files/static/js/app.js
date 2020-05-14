@@ -23,7 +23,7 @@ function optionChanged(newData){
 }
 init();
 // metadata function for Demographic Info panel
-function plotData(id) {
+function plotData(newData) {
     //import the data ()
     d3.json("samples.json").then((data) => {
         //console.log to verify file was read
@@ -46,7 +46,7 @@ function plotData(id) {
     });
 };
 // store data for plotting 
-function sample_metadata(id) {
+function sample_metadata(newData) {
     //import id numbers()
     d3.json("samples.json").then((data) => {
         //console.log to verify file was read
